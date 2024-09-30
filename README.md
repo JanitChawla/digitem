@@ -1,7 +1,3 @@
-Here’s a structured and clean **README** for your Digitem assignment:
-
----
-
 # Digitem CI/CD Pipeline and Deployment
 
 ## Table of Contents
@@ -200,4 +196,4 @@ spec:
 ```
 
 ### Additional Notes
-- **Prometheus and Grafana**: Attempted to set up for monitoring, but the VM experienced lag. The YAML configuration files are available on the VM for further inspection.
+- **Prometheus and Grafana**: Attempted to set up for monitoring, but the VM experienced lag. The YAML configuration files are available on the VM for further inspection.  
