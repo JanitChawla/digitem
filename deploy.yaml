@@ -23,6 +23,12 @@ spec:
               cpu: 500m
             requests:
               cpu: 200m
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
 
 ---
 
