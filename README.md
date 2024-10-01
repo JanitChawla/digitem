@@ -79,12 +79,25 @@ NGINX is configured as a reverse proxy for the application and serves a custom 4
 
 ```nginx
 server {
-    listen 8443;
-    location / {
-        proxy_pass http://192.168.49.2:8443;
-    }
+        listen 8000;
+        location / {
+            proxy_pass http://192.168.49.2:31001;
+                    proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
 }
-
+}
+server {
+        listen 8080;
+        location / {
+            proxy_pass http://192.168.49.2:31002;
+                    proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+}
+}
 server {
     listen 443 ssl;
     server_name localhost;
@@ -92,7 +105,6 @@ server {
     ssl_certificate /etc/nginx/certificate/nginx-certificate.crt;
     ssl_certificate_key /etc/nginx/certificate/nginx.key;
 
-    error_page 404 /error.html;
 
     location / {
         proxy_pass http://192.168.49.2:31000;
@@ -102,9 +114,11 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
     }
 
+    # Serve the error page
+    error_page 404 /error.html;
     location = /error.html {
-        root /var/www/html;
-        internal;
+        root /var/www/html;  
+        internal;            
     }
 }
 ```
@@ -116,6 +130,7 @@ The application is deployed on a Kubernetes cluster with the following features:
 - **NodePort Service**: Exposes the application using NodePort.
 - **Health Checks**: Readiness probe to check the application status.
 - **Autoscaling**: HPA configured to scale based on CPU usage.
+- - **Monitoring**: Monitoring using grafana and Prometheus.
 
 ### Kubernetes Deployment YAML
 
@@ -193,7 +208,4 @@ spec:
         target:
           type: Utilization
           averageUtilization: 50
-```
-
-### Additional Notes
-- **Prometheus and Grafana**: Attempted to set up for monitoring, but the VM experienced lag. The YAML configuration files are available on the VM for further inspection.  
+``` 
